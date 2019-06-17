@@ -1,0 +1,16 @@
+Tabelle erzeugen
+_________________
+create table modul(
+	modul_nr  int  (6)  not null,
+	name      char (50) not null,
+	nameshort char (10) not null,
+	anzahlblock int(1) not Null,
+	PRIMARY KEY (modul_nr)
+)
+
+Daten einfügen
+______________
+insert into modul values (000001, 'Praktische Anwendungsentwicklung', 'PrakAnwend', 2)
+insert into modul values (000002, 'Tierstimmenraten für Anfänger', 'Tierstim.A', 1)
+insert into modul values (000003, 'Tierstimmenraten für Fortgeschrittene', 'Tierstim.F', 3)
+insert into modul values (000004, 'Baumhausbauen gegen den Klimawandel', 'Baumhaus', 4)

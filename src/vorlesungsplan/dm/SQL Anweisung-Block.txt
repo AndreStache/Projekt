@@ -1,0 +1,8 @@
+Tabelle erzeugen
+_________________
+create table block(
+	plan_nr int REFERENCES vorlesungsplan (plan_nr)not null PRIMARY KEY,
+	block_day char (3) not null,
+	block_nr int not null,
+	modul_nr int REFERENCES modul (modul_nr)not null	
+)

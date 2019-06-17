@@ -1,0 +1,15 @@
+Tabelle erzeugen
+_________________
+create table semester(
+	semester_id int not null PRIMARY KEY,
+	semester_bez varchar(20) not null,
+	semester_start date not null,
+	semester_ende date not null
+)
+
+Daten einfügen
+______________
+insert into semester values (1, 'WiSe 2019/20', '01.10.2019', '31.03.2020')
+insert into semester values (2, 'SoSe 2019', '01.04.2019', '31.09.2019')
+insert into semester values (3, 'WiSe 2020/2021', '01.10.2020', '31.03.2020')
+insert into semester values (4, 'SoSe 2020', '01.04.2020', '31.09.2020')

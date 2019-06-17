@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1"
+          alignment="CENTER" hgap="10.0" vgap="10.0"
+          stylesheets="@ViewVorlesungsplan.css">
+    <padding>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+    </padding>
+    <HBox spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="0">
+        <Label fx:id="lbErstellungsdatum" text="Erstellungsdatum: "/>
+        <TextField fx:id="tfErstellungsdatum" promptText="Erstellungsdatum"/>
+
+        <Label fx:id="lbSemester" text="Semester: "/>
+        <!-- <TextField fx:id="tfSemester" promptText="Semesternr" /> -->
+        <ComboBox fx:id="cbSemesterJahr" layoutX="15.0" layoutY="33.0" promptText="Bitte waehlen"/>
+        <ComboBox fx:id="cbSemesterZahl" layoutX="15.0" layoutY="33.0" promptText="Bitte waehlen"/>
+
+        <Label fx:id="lbAenderungsdatum" text="Änderungsdatum: "/>
+        <DatePicker fx:id="dpDateaenderung"/>
+
+        <Button fx:id="btNeu" text="Neu"/>
+        <Button fx:id="btAnzeigen" text="Anzeigen"/>
+        <Button fx:id="btLoeschen" text="Löschen"/>
+    </HBox>
+    <TableView fx:id="tvVorlesungsplan" editable="true"
+               prefHeight="100" GridPane.columnIndex="0" GridPane.rowIndex="1">
+        <columns>
+            <TableColumn fx:id="tcBlock" Text="Block"/>
+            <TableColumn fx:id="tcMontag" Text="Montag"/>
+            <TableColumn fx:id="tcDienstag" Text="Dienstag"/>
+            <TableColumn fx:id="tcMittwoch" Text="Mittwoch"/>
+            <TableColumn fx:id="tcDonnerstag" Text="Donnerstag"/>
+            <TableColumn fx:id="tcFreitag" Text="Freitag"/>
+        </columns>
+    </TableView>
+    <HBox spacing="10" alignment="bottom_left"
+          GridPane.columnIndex="0" GridPane.rowIndex="2">
+        <TextField fx:id="tfModulNr" promptText="Modulnummer"/>
+        <TextField fx:id="tfBlockTag" promptText="Tag"/>
+        <TextField fx:id="tfBlockNr" promptText="Blocknummer"/>
+        <Button fx:id="btUebernehmen" text="Übernehmen"/>
+
+    </HBox>
+    <HBox spacing="10" alignment="bottom_left"
+          GridPane.columnIndex="0" GridPane.rowIndex="3">
+        <Button fx:id="btSpeichern" text="Speichern"/>
+    </HBox>
+</GridPane>
+

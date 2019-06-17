@@ -1,0 +1,42 @@
+.button {
+    -fx-background-radius: 0;
+}
+
+
+/* see http://blog.ngopal.com.np/2012/07/11/customize-scrollbar-via-css/ */
+.lvModul {
+    -fx-border-color: derive(gray, 80%);
+}
+
+/* The main scrollbar CSS class of lvModul */
+.lvModul .scroll-bar:horizontal,
+.lvModul .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+/* The main scrollbar **track** CSS class  */
+.lvModul .scroll-bar:horizontal .track,
+.lvModul .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+    -fx-border-color: derive(gray, 80%);
+    -fx-background-radius: 0em;
+}
+
+/* The main scrollbar **thumb** CSS class which we drag every time (movable) */
+.lvModul .scroll-bar:horizontal .thumb,
+.lvModul .scroll-bar:vertical .thumb {
+    -fx-background-color: derive(black, 90%);
+    -fx-background-insets: 0, 0, 0;
+    -fx-background-radius: 0em;
+
+}
+
+/* The increment and decrement button CSS class of scrollbar */
+.lvModul .increment-button, .lvModul .decrement-button {
+    -fx-background-color: transparent;
+    -fx-border-color: derive(gray, 80%);
+}
+
+.list-cell {
+    -fx-font-family: Consolas;
+}
