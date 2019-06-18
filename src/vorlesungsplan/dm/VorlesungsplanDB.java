@@ -68,9 +68,9 @@ public class VorlesungsplanDB {
         return db;
     }
 
-    public void createVorlesungsplan(Integer semester, LocalDate erstellDatum, Integer semesterZahl) {
-        String query = "select plan_nr from vorlesungsplan where semester_id = " + semester;
-        // System.out.println(query);
+    public Boolean createVorlesungsplan(Integer semester, LocalDate erstellDatum, Integer semesterZahl) {
+        String query = "select plan_nr from vorlesungsplan where semester_id = " + semester + " AND semester_zahl = " + semesterZahl;
+//        System.out.println(query);
         Integer maxPlanNr = 0;
 
         try {
@@ -89,13 +89,17 @@ public class VorlesungsplanDB {
 						+ " values(" + maxPlanNr + ", " + semester + ", to_date('" + erstellDatum + "', 'yyyy-mm-dd'), " + semesterZahl + ")";*/
                 query = "insert into vorlesungsplan(plan_nr, semester_id, erstellungsdatum, semester_zahl)"
                         + " values(" + maxPlanNr + ", " + semester + ", '" + erstellDatum + "', " + semesterZahl + ")";
-                System.out.println(query);
+//                System.out.println(query);
                 Integer result = stmt.executeUpdate(query);
-                System.out.println(result);
+                if (result == 1) {
+                    return true;
+                }
+                return false;
+//                System.out.println(result);
 
             } else {
                 // #TODO Das muss dem User angezeigt werden
-                System.out.println("Plan existiert schon");
+                return false;
             }
         } catch (SQLException ex) {
             // assert false: "SQL pr�fen";
@@ -108,13 +112,10 @@ public class VorlesungsplanDB {
 //		System.out.println(query);
         try {
             //TODO R�ckmeldungen an den User
-            ResultSet result = stmt.executeQuery(query);
-            while (result.next()) {
-                if (result.getFetchSize() == 1) {
+            Integer result = stmt.executeUpdate(query);
+            if (result == 1) {
                     return true;
-                }
             }
-//			return false;
             return false;
         } catch (SQLException e) {
             // TODO Auto-generated catch block
@@ -144,7 +145,6 @@ public class VorlesungsplanDB {
     public void saveVorlesungsplan() {
         try {
             conn.commit();
-            System.out.println("Commit");
         } catch (SQLException ex) {
             throw new VorlesungsplanDBException("Vorlesungsplan konnte nicht gespeichert werden: " + ex);
         }
@@ -171,20 +171,22 @@ public class VorlesungsplanDB {
     }
 
     public Vorlesungsplan loadVorlesungsplan(Semester semester, int semesterZahl) {
-        Vorlesungsplan vorlesungsplan = new Vorlesungsplan();
-        String query = "select plan_id, semeseter_id  from vorlesungsplan JOIN semester ON vorlesungsplan.semester_id = semester_id where semester_zahl = " + semesterZahl + " AND semester_bez LIKE '" + semester.getSemester_bez() + "'";
+        Vorlesungsplan plan = new Vorlesungsplan();
+        String query = "select plan_id, semeseter_id, erstellungsdatum from vorlesungsplan JOIN semester ON vorlesungsplan.semester_id = semester_id where semester_zahl = " + semesterZahl + " AND semester_bez LIKE '" + semester.getSemester_bez() + "'";
 
         System.out.println(query);
 
-		/*try {
+        try {
 			ResultSet rset = stmt.executeQuery(query);
 			while (rset.next()) {
+                plan.setErstellungsdatum(rset.getDate("erstellungsdatum").toLocalDate());
 			}
 		} catch (SQLException ex) {
 			// assert false: "SQL pr�fen";
 			throw new VorlesungsplanDBException("Datenbankzugriffsfehler: " + ex);
-		}*/
+        }
 
-        return vorlesungsplan;
+        return plan;
     }
+
 }

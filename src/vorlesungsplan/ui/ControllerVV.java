@@ -32,7 +32,7 @@ public class ControllerVV {
     @FXML
     public TableColumn<TableItem, String> tcDienstag;
     @FXML
-    public Button btNeu, btAbbruch, btLoeschen, btUebernehmen, btSpeichern;
+    public Button btNeu, btAbbruch, btLoeschen, btUebernehmen, btSpeichern, btAnzeigen;
     @FXML
     public DatePicker dpErstellungsdatum;
     @FXML
@@ -62,6 +62,10 @@ public class ControllerVV {
         if (btUebernehmen == e.getSource()) {
             vorlesungsplan.setModulIntoVP(tfModulNr.getText(), tfBlockTag.getText(), tfBlockNr.getText());
         }
+
+        if (btAnzeigen == e.getSource()) {
+            vorlesungsplan.loadVorlesungsplan(cbSemesterJahr.getValue().toString(), cbSemesterZahl.getValue().toString());
+        }
     }
 
     public void initialize() {
@@ -73,7 +77,7 @@ public class ControllerVV {
 
         //SemesterJahr ComboBox vorbelegen
         cbSemesterJahr.getItems().setAll("WiSe 2019/2020", "SoSe 2019");
-        cbSemesterJahr.setPromptText("Bitte w�hlen");
+        cbSemesterJahr.setPromptText("Bitte waehlen");
         cbSemesterJahr.setEditable(true);
         //ChangeListend
         cbSemesterJahr.valueProperty().addListener(new ChangeListener<String>() {
@@ -123,7 +127,16 @@ public class ControllerVV {
                 actionPerformed(evt);
             }
         });
+
         btUebernehmen.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent evt) {
+                actionPerformed(evt);
+            }
+        });
+
+        btAnzeigen.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent evt) {

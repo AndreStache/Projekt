@@ -3,6 +3,9 @@ package vorlesungsplan.pd;
 import java.util.Date;
 
 public class Semester {
+    String semester_bez;
+    Date semesterStart;
+    Date semesterEnde;
 
     public Semester() {
     }
@@ -37,8 +40,5 @@ public class Semester {
         this.semesterEnde = semesterEnde;
     }
 
-    String semester_bez;
-    Date semesterStart;
-    Date semesterEnde;
 
 }

@@ -15,6 +15,8 @@ public class Vorlesungsplan {
     private Semester semester;
     private Block block;
     private Integer semesterZahl;
+    private LocalDate erstellungsdatum;
+    private LocalDate aenderungsdatum;
     private static VorlesungsplanDB vorlesungsplanDB = VorlesungsplanDB.getInstance();
 
     //	private static HashMap<String, Modul> availableModule =	vorlesungsplanDB.getAllModule();
@@ -31,10 +33,21 @@ public class Vorlesungsplan {
     }
 
 
-//	public static Modul searchModul(int id) {
-//		Modul modul = vorlesungsplanDB.searchModul(id);
-//		return modul;
-//	}
+    public LocalDate getErstellungsdatum() {
+        return erstellungsdatum;
+    }
+
+    public void setErstellungsdatum(LocalDate erstellungsdatum) {
+        this.erstellungsdatum = erstellungsdatum;
+    }
+
+    public LocalDate getAenderungsdatum() {
+        return aenderungsdatum;
+    }
+
+    public void setAenderungsdatum(LocalDate aenderungsdatum) {
+        this.aenderungsdatum = aenderungsdatum;
+    }
 
     public void stop() throws VorlesungsplanDBException {
         vorlesungsplanDB.closeConnection();
@@ -61,6 +74,7 @@ public class Vorlesungsplan {
     public boolean createVorlesungsplan(String semesterBez, String erstellungsDatum, String semesterZahl) {
         Integer semesterNr = 0;
         Integer zahl = 0;
+        Boolean create = false;
         LocalDate erstellDatum = LocalDate.now();
         DateTimeFormatter df = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
 
@@ -79,10 +93,14 @@ public class Vorlesungsplan {
             semesterNr = vorlesungsplanDB.getSemesterBySemesterBez(semesterBez);
             zahl = parseInt(semesterZahl);
         }
-        System.out.println("Semester ID: " + semesterNr);
         //TODO Einstellen, dass nur gespeichert werden kann, wenn die Vorbedingungen fehlerfrei sind.
-        vorlesungsplanDB.createVorlesungsplan(semesterNr, erstellDatum, zahl);
-        showSuccessMessage("Plan wurde erstellt");
+        create = vorlesungsplanDB.createVorlesungsplan(semesterNr, erstellDatum, zahl);
+
+        if (create == true) {
+            showSuccessMessage("Plan wurde erstellt");
+        } else {
+            showErrorMessage("Plan konnte nicht erstellt werden.");
+        }
 
         return true;
     }
@@ -97,7 +115,12 @@ public class Vorlesungsplan {
         } else {
             semesterNr = vorlesungsplanDB.getSemesterBySemesterBez(semester);
             sucessfulDeletion = vorlesungsplanDB.deleteVorlesungplanung(semesterNr, semeter);
-            showSuccessMessage("Der Plan wurde erfolgreich gel�scht");
+
+            if (sucessfulDeletion == true) {
+                showSuccessMessage("Der Plan wurde erfolgreich gel�scht");
+            } else {
+                showErrorMessage("Der Plan konnte nicht gelöscht werden.");
+            }
         }
         //TODO Einstellen, dass nur gelöscht werden kann, wenn die Vorbedingungen fehlerfrei sind.
         return sucessfulDeletion;
@@ -105,13 +128,14 @@ public class Vorlesungsplan {
 
     public void saveVorlesungsplan() {
         vorlesungsplanDB.saveVorlesungsplan();
-        //TODO Fehlermeldungen hierher ziehen, aus DM Schicht
+        showSuccessMessage("Erfolgreich gespeichert.");
     }
 
-    public Vorlesungsplan loadVorlesungsplan(String semesterJaht, Integer semesterZahl) {
+    public Vorlesungsplan loadVorlesungsplan(String semesterJaht, String semesterZahl) {
         Semester semester = new Semester();
         semester.setSemester_bez(semesterJaht);
-        Vorlesungsplan plan = vorlesungsplanDB.loadVorlesungsplan(semester, semesterZahl);
+
+        Vorlesungsplan plan = vorlesungsplanDB.loadVorlesungsplan(semester, parseInt(semesterZahl));
 
         return plan;
     }
