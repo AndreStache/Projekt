@@ -3,6 +3,7 @@ _________________
 create table vorlesungsplan(
 	plan_nr int not null PRIMARY KEY,
 	semester_nr  int not null,
+	semester_zahl int not null
 	erstellungsdatum date not null,
 	aenderungsdatum date not null
 )

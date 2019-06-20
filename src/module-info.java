@@ -1,4 +1,4 @@
-module ProjektPAWE {
+module Projekt {
     exports vorlesungsplan;
     exports vorlesungsplan.dm;
     exports vorlesungsplan.pd;
