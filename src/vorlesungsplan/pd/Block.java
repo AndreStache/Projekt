@@ -5,6 +5,9 @@ public class Block {
     int block_nr;
     Modul modul;
 
+
+    Integer blockId;
+
     public Block() {
     }
 
@@ -36,5 +39,13 @@ public class Block {
 
     public void setModul(Modul modul) {
         this.modul = modul;
+    }
+
+    public Integer getBlockId() {
+        return blockId;
+    }
+
+    public void setBlockId(Integer blockId) {
+        this.blockId = blockId;
     }
 }

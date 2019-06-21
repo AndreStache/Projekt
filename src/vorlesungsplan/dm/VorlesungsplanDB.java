@@ -1,5 +1,6 @@
 package vorlesungsplan.dm;
 
+import vorlesungsplan.pd.Block;
 import vorlesungsplan.pd.Modul;
 import vorlesungsplan.pd.Semester;
 import vorlesungsplan.pd.Vorlesungsplan;
@@ -7,6 +8,7 @@ import vorlesungsplan.pd.Vorlesungsplan;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 
 public class VorlesungsplanDB {
     private Connection conn;
@@ -108,8 +110,8 @@ public class VorlesungsplanDB {
     }
 
     public boolean deleteVorlesungplanung(Integer semesterNr, Integer semesterZahl) {
-        String query = "DELETE FROM vorlesungsplan WHERE semester_nr = " + semesterNr + " AND semesterZahl = ";
-//		System.out.println(query);
+        String query = "DELETE FROM vorlesungsplan WHERE semester_id = " + semesterNr + " AND semester_zahl = " + semesterZahl;
+        System.out.println(query);
         try {
             //TODO R�ckmeldungen an den User
             Integer result = stmt.executeUpdate(query);
@@ -170,16 +172,24 @@ public class VorlesungsplanDB {
         return modul;
     }
 
-    public Vorlesungsplan loadVorlesungsplan(Semester semester, int semesterZahl) {
-        Vorlesungsplan plan = new Vorlesungsplan();
-        String query = "select plan_id, semeseter_id, erstellungsdatum from vorlesungsplan JOIN semester ON vorlesungsplan.semester_id = semester_id where semester_zahl = " + semesterZahl + " AND semester_bez LIKE '" + semester.getSemester_bez() + "'";
+    public Vorlesungsplan loadVorlesungsplan(String semesterBez, int semesterZahl) {
+        Vorlesungsplan plan = null;
+        String query = "select plan_nr, semester_zahl, erstellungsdatum, aenderungsdatum, semester_bez from vorlesungsplan JOIN semester ON vorlesungsplan.semester_id = semester.semester_id where semester_zahl = " + semesterZahl + " AND semester_bez LIKE '" + semesterBez + "'";
 
         System.out.println(query);
 
         try {
 			ResultSet rset = stmt.executeQuery(query);
 			while (rset.next()) {
+                Semester semester = new Semester();
+                semester.setSemester_bez(rset.getString("semester_bez"));
+
+                plan = new Vorlesungsplan(semester, semesterZahl);
                 plan.setErstellungsdatum(rset.getDate("erstellungsdatum").toLocalDate());
+
+                if (rset.getDate("aenderungsdatum") != null) {
+                    plan.setAenderungsdatum(rset.getDate("aenderungsdatum").toLocalDate());
+                }
 			}
 		} catch (SQLException ex) {
 			// assert false: "SQL pr�fen";
@@ -187,6 +197,49 @@ public class VorlesungsplanDB {
         }
 
         return plan;
+    }
+
+    public Boolean insertBlockPlan(Integer plan_nr, List<Block> blockListe) {
+        Integer maxBlockPlan = 0;
+        String query = "select max(blockplan_id) as blockplan_id from blockplan";
+        ResultSet maxBlockPlanResult = null;
+        try {
+            maxBlockPlanResult = stmt.executeQuery(query);
+            while (maxBlockPlanResult.next()) {
+                maxBlockPlan = maxBlockPlanResult.getInt("blockplan_id");
+
+                maxBlockPlan++;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        for (Block block : blockListe) {
+            String insert = "INSERT INTO blockplan value(" + maxBlockPlan + ", " + block.getBlockId() + ", " + plan_nr + ")";
+            try {
+                stmt.executeUpdate(insert);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
+    }
+
+    public Boolean updateVorlesungsplan(Integer plan_nr, Integer semesterNr, Integer semesterId, LocalDate aenderungsdatum, List<Block> blockListe) {
+
+        String query = "UPDATE vorlesungsplan SET semester_id = " + semesterId + ", semester_zahl = " + semesterNr + ", aenderungsdatum = '" + aenderungsdatum + "' WHERE plan_nr = " + plan_nr + ";";
+
+        try {
+            stmt.executeUpdate(query);
+
+            Boolean insert = insertBlockPlan(plan_nr, blockListe);
+            if (insert) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }

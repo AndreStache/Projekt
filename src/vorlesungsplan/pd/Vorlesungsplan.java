@@ -25,7 +25,7 @@ public class Vorlesungsplan {
     public Vorlesungsplan() {
     }
 
-    public Vorlesungsplan(Semester semester, Block block, Integer semesterZahl) {
+    public Vorlesungsplan(Semester semester, Integer semesterZahl) {
         this.semester = semester;
         //block muss hier glaube ich nicht drin sein
         this.block = block;
@@ -49,6 +49,21 @@ public class Vorlesungsplan {
         this.aenderungsdatum = aenderungsdatum;
     }
 
+    public Semester getSemester() {
+        return semester;
+    }
+
+    public void setSemester(Semester semester) {
+        this.semester = semester;
+    }
+
+    public Integer getSemesterZahl() {
+        return semesterZahl;
+    }
+
+    public void setSemesterZahl(Integer semesterZahl) {
+        this.semesterZahl = semesterZahl;
+    }
     public void stop() throws VorlesungsplanDBException {
         vorlesungsplanDB.closeConnection();
     }
@@ -131,11 +146,8 @@ public class Vorlesungsplan {
         showSuccessMessage("Erfolgreich gespeichert.");
     }
 
-    public Vorlesungsplan loadVorlesungsplan(String semesterJaht, String semesterZahl) {
-        Semester semester = new Semester();
-        semester.setSemester_bez(semesterJaht);
-
-        Vorlesungsplan plan = vorlesungsplanDB.loadVorlesungsplan(semester, parseInt(semesterZahl));
+    public Vorlesungsplan loadVorlesungsplan(String semesterBez, String semesterZahl) {
+        Vorlesungsplan plan = vorlesungsplanDB.loadVorlesungsplan(semesterBez, parseInt(semesterZahl));
 
         return plan;
     }

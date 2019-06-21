@@ -12,8 +12,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import vorlesungsplan.pd.Block;
-import vorlesungsplan.pd.Semester;
 import vorlesungsplan.pd.TableItem;
 import vorlesungsplan.pd.Vorlesungsplan;
 
@@ -22,11 +20,11 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
 public class ControllerVV {
-    public Vorlesungsplan vorlesungsplan = new Vorlesungsplan(new Semester(), new Block(), 1);
+    public Vorlesungsplan vorlesungsplan = new Vorlesungsplan();
     @FXML
     public TableView<TableItem> tvVorlesungsplan;
     @FXML
-    public TextField tfErstellungsdatum, tfModulNr, tfBlockTag, tfBlockNr;
+    public TextField tfErstellungsdatum, tfModulNr, tfBlockTag, tfBlockNr, tfAenderungsdatum;
     @FXML
     public TableColumn<TableItem, String> tcBlock;
     @FXML
@@ -53,6 +51,15 @@ public class ControllerVV {
 
         if (btLoeschen == e.getSource()) {
             Boolean result = vorlesungsplan.deleteVorlesungsplanung(cbSemesterJahr.getValue().toString(), cbSemesterZahl.getValue().toString());
+
+            tfErstellungsdatum.setDisable(false);
+            tfErstellungsdatum.setText(LocalDate.now().toString());
+
+            tfAenderungsdatum.setDisable(true);
+            tfAenderungsdatum.setText("");
+
+            cbSemesterJahr.setDisable(false);
+            cbSemesterZahl.setDisable(false);
         }
 
         if (btSpeichern == e.getSource()) {
@@ -64,7 +71,22 @@ public class ControllerVV {
         }
 
         if (btAnzeigen == e.getSource()) {
-            vorlesungsplan.loadVorlesungsplan(cbSemesterJahr.getValue().toString(), cbSemesterZahl.getValue().toString());
+            LocalDate aenderungsdatum;
+            Vorlesungsplan plan = vorlesungsplan.loadVorlesungsplan(cbSemesterJahr.getValue().toString(), cbSemesterZahl.getValue().toString());
+            //Aenderungsdatum belegen mit bereitsausgefülltem Datum aus DB oder mit aktuellem Tagedatum
+            if (plan.getAenderungsdatum() == null) {
+                aenderungsdatum = LocalDate.now();
+            } else {
+                aenderungsdatum = plan.getAenderungsdatum();
+            }
+            DateTimeFormatter df;
+            df = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);    // 31.01.2016
+            tfAenderungsdatum.setText(aenderungsdatum.format(df));
+            tfErstellungsdatum.setText(plan.getErstellungsdatum().format(df));
+
+            tfErstellungsdatum.setDisable(true);
+            cbSemesterJahr.setDisable(true);
+            cbSemesterZahl.setDisable(true);
         }
     }
 

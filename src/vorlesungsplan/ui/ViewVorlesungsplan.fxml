@@ -19,7 +19,7 @@
         <ComboBox fx:id="cbSemesterZahl" layoutX="15.0" layoutY="33.0" promptText="Bitte waehlen"/>
 
         <Label fx:id="lbAenderungsdatum" text="Änderungsdatum: "/>
-        <DatePicker fx:id="dpDateaenderung"/>
+        <TextField fx:id="tfAenderungsdatum" promptText="Aenderungsdatum"/>
 
         <Button fx:id="btNeu" text="Neu"/>
         <Button fx:id="btAnzeigen" text="Anzeigen"/>
